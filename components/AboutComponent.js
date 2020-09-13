@@ -31,7 +31,6 @@ class About extends Component {
     }
 
     render() {
-        const { navigate } = this.props.navigation;
         const renderPartner = ({item}) => {
             return (
                 <ListItem
