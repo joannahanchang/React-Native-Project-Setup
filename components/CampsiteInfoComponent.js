@@ -4,6 +4,7 @@ import { Card, Icon, Rating, Input} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavorite } from '../redux/ActionCreators';
+import { postComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -14,7 +15,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    postFavorite: campsiteId => (postFavorite(campsiteId))
+    postFavorite: campsiteId => (postFavorite(campsiteId)),
+    postComment: ([campsiteId, rating, author, text]) => (postComment([campsiteId, rating, author, text]))
 };
 
 function RenderCampsite(props) {
@@ -55,7 +57,6 @@ function RenderCampsite(props) {
 }
 
 function RenderComments({comments}) {
-
     const renderCommentItem = ({item}) => {
         return (
             <View style={{margin: 10}}>
@@ -102,8 +103,14 @@ class CampsiteInfo extends Component {
     }
 
     handleComment(campsiteId) {
-        console.log(JSON.stringify(this.state));
+        // console.log(JSON.stringify(this.state));
         this.toggleModal();
+        this.props.postComment([
+            campsiteId,
+            this.state.rating,
+            this.state.author,
+            this.state.text
+        ]);
     }
 
     resetForm() {
@@ -153,19 +160,19 @@ class CampsiteInfo extends Component {
                         leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                         leftIconContainerStyle = {{paddingRight: 10}}
                         style={styles}
-                        onChangeText={value => this.setState({author: value })}
+                        onChangeText={(value)=>this.setState({author: value })}
                     />
                     <Input
                         placeholder="Comment"
                         leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
                         leftIconContainerStyle = {{paddingRight: 10}}
                         style={styles}
-                        onChangeText={value => this.setState({text: value })}
+                        onChangeText={(value)=>this.setState({text: value })}
                     />
                     <View style={{margin: 10}}>
                         <Button
                             onPress={() => {
-                                this.handleComment();
+                                this.handleComment(campsiteId);
                                 this.resetForm();
                             }}
                             color='#5637DD'
